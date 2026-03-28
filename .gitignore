@@ -1,0 +1,61 @@
+# Rommel - Copilot Migration Tool
+# .gitignore
+
+# Session and development logs
+session.md
+
+# Temporary helper scripts (generated during skill execution)
+.rommel-session.ps1
+.az-helper.ps1
+.get-environments.ps1
+.get-copilots.ps1
+.execute-migration.ps1
+.debug-bot-creation.ps1
+.import-components.ps1
+.publish-bot.ps1
+
+# Export files (contain bot definitions)
+*-[0-9]*.json
+!package.json
+!tsconfig.json
+!version.json
+
+# Migration reports
+migration-report-*.txt
+
+# Logs
+*.log
+
+# PowerShell artifacts
+*.ps1xml
+
+# Temporary files
+*.tmp
+*.temp
+
+# Backup files
+*.bak
+*.backup
+
+# User-specific files
+.vscode/
+.idea/
+*.code-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Authentication tokens (should never be committed)
+*.token
+.auth/
+
+# Environment-specific config
+.env
+.env.local
+config.local.json
+
+# Test outputs
+test-results/
+coverage/
