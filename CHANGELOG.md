@@ -5,6 +5,48 @@ All notable changes to Navigator - Copilot Migration Pathfinder will be document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-03-28
+
+### Added
+- 🖥️ **Channel 3: VS Code Extension** (`vscode-extension/`)
+  - `Ctrl+Shift+T` keyboard shortcut for Quick Deploy
+  - Command Palette: "Navigator: Quick Deploy" and "Navigator: Full Migration"
+  - Bot name input box + target environment picker (QuickPick dropdown)
+  - Progress notification showing [1/3], [2/3], [3/3] milestones
+  - "Open Test Chat" button on Quick Deploy success
+  - Dedicated Navigator output channel for full script output
+  - Error notification with "Show Output" button on failure
+  - Calls existing `Invoke-Navigator-Enhanced.ps1` — zero duplicated logic
+
+- 📁 **Project structure improvements**
+  - `planning/` folder for session notes and planning docs (gitignored)
+  - `temp/` folder for exported bot JSON artifacts (gitignored)
+
+### Fixed
+- 🐛 `az powerplatform` extension dependency removed — environments now fetched via REST API directly (`https://api.bap.microsoft.com`)
+- 🐛 `Select-Copilot` not recognized — removed nested `Import-Module` from `Copilot-QuickDeploy.psm1` that was pulling `Copilot-Core` out of session scope
+- 🐛 Environment names blank — fixed `PSCustomObject` vs hashtable indexing issue; added `@()` array forcing; added `displayName → friendlyName → name` fallback chain
+- 🐛 401 Unauthorized on Dataverse calls — `Get-AuthHeaders` now accepts `-Resource` parameter; all Dataverse callers pass `$envUrl` as resource for correctly scoped tokens
+- 🐛 `$filter` unsupported on `bots` entity — switched to client-side filtering (`Where-Object`) for bot name lookups
+- 🐛 Empty `BotId` on create — added `Prefer: return=representation` header to POST so Dataverse returns the created entity
+- 🐛 `_publishedby_value cannot be updated to null` — `Remove-SystemFields` now strips all `_*_value` reference fields automatically
+- 🐛 Components not migrated — replaced hardcoded type filters (0/1/2) with `All` collection capturing every `componenttype`; resolves missing Knowledge (type 16), Topics (type 9), Agent skills (type 15)
+
+### Changed
+- Modules moved from `scripts/Modules/` to flat `scripts/` — matches Claude Code skill spec
+- `SKILL.md` now has required frontmatter (`name`, `description`, `triggers`)
+- Source environment selection is now interactive (no longer hardcoded to "Development")
+- `docs/` folder gitignored (internal planning docs)
+- README cleaned of v1/v2 migration references and internal docs links
+
+### Removed
+- `Copilot-LLM-Intelligence.psm1` — not imported by any script
+- Duplicate root-level scripts (`Invoke-Navigator-Enhanced.ps1`, `Invoke-Navigator.ps1`, `Modules/`)
+- `README-v1.1.0-backup.md`
+- All `docs/` internal planning documents
+
+---
+
 ## [2.0.0] - 2026-03-28
 
 ### Added
@@ -226,10 +268,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History
 
-| Version | Date       | Description                              |
-|---------|------------|------------------------------------------|
-| 1.1.0   | 2026-03-28 | Added copilot analysis feature           |
-| 1.0.0   | 2026-03-28 | Initial release                          |
+| Version | Date       | Description                                          |
+|---------|------------|------------------------------------------------------|
+| 2.1.0   | 2026-03-28 | VS Code extension (Channel 3), bug fixes             |
+| 2.0.0   | 2026-03-28 | Dual-mode deployment, three-channel architecture     |
+| 1.1.0   | 2026-03-28 | Added copilot analysis feature                       |
+| 1.0.0   | 2026-03-28 | Initial release                                      |
 
 ---
 

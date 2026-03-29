@@ -29,8 +29,9 @@ migration-report-*.txt
 # PowerShell artifacts
 *.ps1xml
 
-# Internal documentation (tracked separately)
+# Internal documentation and planning (tracked separately)
 docs/
+planning/
 
 # Temporary files
 *.tmp

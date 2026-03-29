@@ -122,9 +122,31 @@ cd C:\code\ClaudeCopilotMgmtSkill
 
 ---
 
-#### Option 3: VS Code Extension (Future)
+#### Option 3: VS Code Extension
 
-Coming soon! Track progress in [ROADMAP.md](ROADMAP.md).
+**Prerequisites:** Node.js 18+, npm
+
+```powershell
+# 1. Build the extension
+cd C:\code\ClaudeCopilotMgmtSkill\vscode-extension
+npm install
+npm run compile
+
+# 2. Package it
+npm install -g @vscode/vsce
+vsce package
+
+# 3. Install in VS Code
+code --install-extension navigator-vscode-1.0.0.vsix
+```
+
+Or sideload during development:
+1. Open `vscode-extension/` in VS Code
+2. Press `F5` to launch Extension Development Host
+
+**After installing:**
+- `Ctrl+Shift+T` → Quick Deploy
+- Command Palette (`Ctrl+Shift+P`) → "Navigator: Quick Deploy" or "Navigator: Full Migration"
 
 ---
 
@@ -236,19 +258,22 @@ PS> .\Invoke-Navigator-Enhanced.ps1 -Mode Quick -BotName "Sales Assistant" -Targ
 
 ---
 
-#### 3️⃣ VS Code Extension (Future)
+#### 3️⃣ VS Code Extension
 
 ```
 1. Press Ctrl+Shift+T in VS Code
-2. Select target environment
-3. Done!
+2. Enter bot name
+3. Select target environment
+4. Watch progress notification
+5. Click "Open Test Chat" when done
 ```
 
 **Pros:**
-- IDE integration
-- Keyboard shortcuts
-- Visual progress
-- Embedded test chat
+- IDE integration — never leave VS Code
+- `Ctrl+Shift+T` keyboard shortcut
+- Progress notifications with milestones
+- "Open Test Chat" button on completion
+- Navigator output channel for full logs
 
 ---
 

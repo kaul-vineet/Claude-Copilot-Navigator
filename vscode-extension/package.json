@@ -1,0 +1,42 @@
+{
+  "name": "navigator-vscode",
+  "displayName": "Navigator",
+  "description": "Quick Deploy and Full Migration for Microsoft Copilot Studio bots",
+  "version": "1.0.0",
+  "publisher": "copilot-zapper-team",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "navigator.quickDeploy",
+        "title": "Navigator: Quick Deploy"
+      },
+      {
+        "command": "navigator.fullMigration",
+        "title": "Navigator: Full Migration"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "navigator.quickDeploy",
+        "key": "ctrl+shift+t",
+        "mac": "cmd+shift+t"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.3.0"
+  }
+}
