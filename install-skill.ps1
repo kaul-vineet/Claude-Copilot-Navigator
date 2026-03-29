@@ -45,7 +45,7 @@ $ErrorActionPreference = "Stop"
 
 # Configuration
 $skillName = "navigator"
-$skillVersion = "2.0.0"
+$skillVersion = "2.2.0"
 $claudeDir = Join-Path $env:USERPROFILE ".claude"
 $skillsDir = Join-Path $claudeDir "skills\$skillName"
 $sourceDir = $PSScriptRoot
@@ -176,7 +176,9 @@ function Install-NavigatorSkill {
         Write-Host "   ✅ SKILL.md" -ForegroundColor Green
         Write-Host "   ✅ scripts/Navigator.ps1" -ForegroundColor Green
         Write-Host "   ✅ scripts/Invoke-Navigator.ps1" -ForegroundColor Green
-        Write-Host "   ✅ scripts/Modules/ (4 modules)" -ForegroundColor Green
+        Write-Host "   ✅ scripts/Copilot-Core.psm1" -ForegroundColor Green
+        Write-Host "   ✅ scripts/Copilot-QuickDeploy.psm1" -ForegroundColor Green
+        Write-Host "   ✅ scripts/Copilot-Analysis.psm1" -ForegroundColor Green
     }
 
     # Copy documentation
@@ -236,7 +238,6 @@ try {
         Write-Host ""
         Write-Host "📖 Documentation:" -ForegroundColor White
         Write-Host "   - README: $skillsDir\README.md" -ForegroundColor Gray
-        Write-Host "   - Quick Start: $skillsDir\QUICK_START.md" -ForegroundColor Gray
         Write-Host ""
         Write-Host "🔧 Management:" -ForegroundColor White
         Write-Host "   - Update: .\install-skill.ps1 -Update" -ForegroundColor Gray
