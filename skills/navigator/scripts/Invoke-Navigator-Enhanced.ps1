@@ -84,18 +84,16 @@ Write-Host "━━━━━━━━━━━━━━━━━━━━━━�
 Write-Host ""
 
 # Import modules
-$modulePath = Join-Path $PSScriptRoot "Modules"
-
 try {
-    Import-Module (Join-Path $modulePath "Copilot-Core.psm1") -Force
-    Import-Module (Join-Path $modulePath "Copilot-QuickDeploy.psm1") -Force
+    Import-Module (Join-Path $PSScriptRoot "Copilot-Core.psm1") -Force
+    Import-Module (Join-Path $PSScriptRoot "Copilot-QuickDeploy.psm1") -Force
 }
 catch {
     Write-Error "Failed to import required modules: $_"
     Write-Host ""
     Write-Host "Please ensure the following modules exist:" -ForegroundColor Yellow
-    Write-Host "  - Modules\Copilot-Core.psm1" -ForegroundColor Gray
-    Write-Host "  - Modules\Copilot-QuickDeploy.psm1" -ForegroundColor Gray
+    Write-Host "  - Copilot-Core.psm1" -ForegroundColor Gray
+    Write-Host "  - Copilot-QuickDeploy.psm1" -ForegroundColor Gray
     Write-Host ""
     exit 1
 }
@@ -129,6 +127,17 @@ if ($Target -eq 'Production' -and $Mode -eq 'Quick') {
 }
 
 # Interactive selection if parameters not provided
+if ($Source -eq 'Development') {
+    try {
+        Write-Host "Select source environment:" -ForegroundColor Yellow
+        $Source = Select-Environment
+    }
+    catch {
+        Write-Error "Failed to select source environment: $_"
+        exit 1
+    }
+}
+
 if (-not $BotName) {
     try {
         $BotName = Select-Copilot -Environment $Source

@@ -14,7 +14,7 @@
 
 Navigator is a powerful deployment tool for Microsoft Copilot Studio that gives you **two ways to move copilots between environments:**
 
-### ⚡ Quick Mode (New in v2.0)
+### ⚡ Quick Mode
 **For Testing & Iteration**
 - ⏱️ **30-60 seconds** deployment time
 - 🚫 No solution packaging
@@ -40,7 +40,6 @@ Navigator is a powerful deployment tool for Microsoft Copilot Studio that gives 
   - [Three Ways to Use](#-three-ways-to-use-navigator)
 - [What Each Script Does](#-what-each-script-does)
 - [How It Works](#-how-it-works)
-- [Migration from v1.x](#-migration-from-v1x)
 - [Troubleshooting](#-troubleshooting)
 - [Advanced Features](#-advanced-features)
 - [Documentation](#-documentation)
@@ -257,7 +256,7 @@ PS> .\Invoke-Navigator-Enhanced.ps1 -Mode Quick -BotName "Sales Assistant" -Targ
 
 ### Main Scripts
 
-#### `Invoke-Navigator-Enhanced.ps1` ⭐ New in v2.0
+#### `Invoke-Navigator-Enhanced.ps1`
 **The dual-mode deployment script**
 
 ```powershell
@@ -275,24 +274,7 @@ PS> .\Invoke-Navigator-Enhanced.ps1 -Mode Quick -BotName "Sales Assistant" -Targ
 - Progress reporting
 - Error handling
 
-**Use this for:** All v2.0 deployments (Quick or Full)
-
----
-
-#### `Invoke-Navigator.ps1`
-**The original Full migration script (v1.0)**
-
-```powershell
-.\Invoke-Navigator.ps1
-```
-
-**What it does:**
-- Full migration with solutions only
-- Interactive menu system
-- Comprehensive component handling
-- Backward compatible with v1.0
-
-**Use this for:** v1.0 compatibility or if you only need Full mode
+**Use this for:** All deployments (Quick or Full)
 
 ---
 
@@ -450,55 +432,6 @@ if ($Target -eq "Production") {
 
 ---
 
-## 🔄 Migration from v1.x
-
-### For v1.0 Users
-
-**Good news:** v2.0 is fully backward compatible!
-
-**Option 1: Keep using v1.0**
-```powershell
-# Continue using the original script
-.\Invoke-Navigator.ps1
-```
-Nothing changes. All v1.0 workflows work.
-
-**Option 2: Upgrade to v2.0**
-```powershell
-# Start using enhanced script
-.\Invoke-Navigator-Enhanced.ps1 -Mode Full
-```
-Same functionality, plus Quick mode option.
-
-**Both scripts can coexist** - use whichever fits your workflow.
-
----
-
-### What's New in v2.0
-
-| Feature | v1.0 | v2.0 |
-|---------|------|------|
-| Full Migration | ✅ | ✅ |
-| Quick Deploy | ❌ | ✅ (New!) |
-| Speed Options | One (5-8 min) | Two (30s or 5-8min) |
-| Solution Packaging | Always | Optional |
-| Default Mode | Full only | Quick (smart) |
-| Production Safety | Manual | Automatic |
-| Three Channels | PowerShell | Skill + PowerShell + VS Code |
-
----
-
-### Upgrade Checklist
-
-- [ ] Review [CHANGELOG.md](CHANGELOG.md) for full changes
-- [ ] Test Quick mode in non-production environment
-- [ ] Update any automation scripts to use `Invoke-Navigator-Enhanced.ps1`
-- [ ] Update skill definition if using Claude Code
-- [ ] Train team on Quick vs Full modes
-- [ ] Celebrate faster testing! 🎉
-
----
-
 ## 🔍 Troubleshooting
 
 ### Quick Mode Issues
@@ -574,8 +507,7 @@ az version  # Must be installed
 ### Getting Help
 
 1. **Check logs:** Review script output for error messages
-2. **Check documentation:** See `docs/` folder for detailed guides
-3. **GitHub Issues:** Report bugs at [GitHub repository]
+2. **GitHub Issues:** Report bugs at [GitHub repository]
 4. **Community:** Ask in discussions
 
 ---
@@ -604,7 +536,7 @@ $env:ANTHROPIC_API_KEY = "sk-ant-your-key-here"
 **Skill-Aware Mode:**
 When running as Claude Code skill, uses Claude Code's built-in AI (no API key needed!)
 
-**Learn More:** See [docs/LLM-INTEGRATION-GUIDE.md](docs/LLM-INTEGRATION-GUIDE.md)
+**Learn More:** Set `$env:ANTHROPIC_API_KEY` and run Navigator normally — AI analysis activates automatically.
 
 ---
 
@@ -656,26 +588,11 @@ foreach ($bot in $copilots) {
 
 ## 📚 Documentation
 
-### Core Documentation
-
-| Document | Purpose | Audience |
-|----------|---------|----------|
-| [README.md](README.md) | Main documentation | All users |
-| [CHANGELOG.md](CHANGELOG.md) | Version history | All users |
-| [ROADMAP.md](ROADMAP.md) | Future plans | Contributors |
-
-### Technical Documentation (docs/)
-
-| Document | Purpose | Audience |
-|----------|---------|----------|
-| [ARCHITECTURE-DECISION.md](docs/ARCHITECTURE-DECISION.md) | Why dual-mode design | Developers |
-| [BOTS-WITHOUT-SOLUTIONS.md](docs/BOTS-WITHOUT-SOLUTIONS.md) | How bots work without solutions | Technical users |
-| [THREE-CHANNEL-ARCHITECTURE.md](docs/THREE-CHANNEL-ARCHITECTURE.md) | Three-channel design | Developers |
-| [IMPLEMENTATION-GUIDE.md](docs/IMPLEMENTATION-GUIDE.md) | Implementation details | Developers |
-| [V2-IMPLEMENTATION-SUMMARY.md](docs/V2-IMPLEMENTATION-SUMMARY.md) | v2.0 summary | Project managers |
-| [LLM-INTEGRATION-GUIDE.md](docs/LLM-INTEGRATION-GUIDE.md) | AI features setup | Advanced users |
-| [SKILL-AWARE-LLM.md](docs/SKILL-AWARE-LLM.md) | Skill-aware mode | Technical users |
-| [WHY-SKILL-AWARE-LLM.md](docs/WHY-SKILL-AWARE-LLM.md) | Detailed explanation | Technical users |
+| Document | Purpose |
+|----------|---------|
+| [README.md](README.md) | Main documentation |
+| [CHANGELOG.md](CHANGELOG.md) | Version history |
+| [ROADMAP.md](ROADMAP.md) | Future plans |
 
 ---
 
@@ -694,18 +611,10 @@ foreach ($bot in $copilots) {
 **Q: Can I use Navigator without Claude Code?**
 **A:** Yes! Just run the PowerShell scripts directly.
 
-**Q: Is v2.0 compatible with v1.0?**
-**A:** Yes! v1.0 script still works, and v2.0 can do everything v1.0 did.
-
----
-
 ### Technical
 
 **Q: How does Quick mode work without solutions?**
-**A:** Bots are Dataverse entities that don't require custom solutions to exist. They're automatically placed in the "Default Solution." See [docs/BOTS-WITHOUT-SOLUTIONS.md](docs/BOTS-WITHOUT-SOLUTIONS.md) for details.
-
-**Q: What happens to my existing workflows?**
-**A:** All v1.0 workflows continue to work. You can gradually adopt v2.0 features.
+**A:** Bots are Dataverse entities that don't require custom solutions to exist. They're automatically placed in the "Default Solution."
 
 **Q: Can I deploy to Production with Quick mode?**
 **A:** No. Production deployments automatically use Full mode for safety and compliance.
@@ -743,7 +652,6 @@ foreach ($bot in $copilots) {
 ✅ **No API keys required** (works out-of-the-box)
 ✅ **Three ways to use** (Skill, PowerShell, VS Code future)
 ✅ **Production safety** (auto-switches to Full mode)
-✅ **Backward compatible** (v1.0 still works)
 
 ### For Administrators
 
@@ -788,22 +696,13 @@ foreach ($bot in $copilots) {
 1. **Install prerequisites** (PowerShell 7, Azure CLI)
 2. **Download Navigator**
 3. **Try Quick deploy** to test environment
-4. **Read documentation** in `docs/` folder
-5. **Join the community**
-
-### Existing Users
-
-1. **Review [CHANGELOG.md](CHANGELOG.md)** for v2.0 changes
-2. **Try Quick mode** for faster testing
-3. **Update skill** if using Claude Code
-4. **Share feedback**
+4. **Join the community**
 
 ### Contributors
 
-1. **Read architecture docs** in `docs/`
-2. **Check [ROADMAP.md](ROADMAP.md)** for planned features
-3. **Submit issues** or PRs
-4. **Help improve documentation**
+1. **Check [ROADMAP.md](ROADMAP.md)** for planned features
+2. **Submit issues** or PRs
+3. **Help improve documentation**
 
 ---
 
@@ -824,7 +723,6 @@ MIT License - See [LICENSE](LICENSE) file for details
 
 ## 📞 Support
 
-- **Documentation:** Check `docs/` folder
 - **Issues:** GitHub Issues
 - **Discussions:** GitHub Discussions
 - **Email:** [Your contact]

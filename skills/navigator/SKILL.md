@@ -1,3 +1,10 @@
+---
+name: navigator
+description: Deploy Microsoft Copilot Studio bots between Power Platform environments using Quick (30-60s) or Full (4-8min) mode
+triggers:
+  - /navigator
+---
+
 # Navigator v2.0 - Enhanced Copilot Deployment Tool
 
 ## Quick Reference

@@ -15,8 +15,12 @@ function Get-AuthHeaders {
     .SYNOPSIS
         Get authentication headers for Power Platform API calls
     #>
+    param(
+        [string]$Resource = "https://api.bap.microsoft.com"
+    )
     try {
-        $token = az account get-access-token --resource https://api.bap.microsoft.com --query accessToken -o tsv
+        $resource = $Resource.TrimEnd('/')
+        $token = az account get-access-token --resource $resource --query accessToken -o tsv
         if (-not $token) {
             throw "Failed to get access token. Please run 'az login' first."
         }
@@ -39,17 +43,25 @@ function Get-AuthHeaders {
 function Get-Environments {
     <#
     .SYNOPSIS
-        Get list of Power Platform environments
+        Get list of Power Platform environments via REST API
     #>
     try {
-        $environments = az powerplatform environment list --query "value[].{name:properties.displayName, id:name}" -o json | ConvertFrom-Json
+        $token = az account get-access-token --resource https://api.bap.microsoft.com --query accessToken -o tsv
+        $headers = @{ 'Authorization' = "Bearer $token" }
 
-        return $environments | ForEach-Object {
-            @{
-                Name = $_.name
-                Id = $_.id
+        $uri = "https://api.bap.microsoft.com/providers/Microsoft.BusinessAppPlatform/environments?api-version=2016-11-01"
+        $response = Invoke-RestMethod -Uri $uri -Headers $headers -Method Get
+
+        return @($response.value | ForEach-Object {
+            $displayName = $_.properties.displayName
+            if (-not $displayName) { $displayName = $_.properties.friendlyName }
+            if (-not $displayName) { $displayName = $_.name }
+            [PSCustomObject]@{
+                Name = $displayName
+                Id   = $_.name
+                Url  = $_.properties.linkedEnvironmentMetadata.instanceUrl
             }
-        }
+        })
     }
     catch {
         Write-Error "Failed to get environments: $_"
@@ -75,10 +87,7 @@ function Get-EnvironmentUrl {
             throw "Environment '$Environment' not found"
         }
 
-        # Get environment details
-        $envDetails = az powerplatform environment show --name $env.Id --query "properties.linkedEnvironmentMetadata.instanceUrl" -o tsv
-
-        return $envDetails
+        return $env.Url
     }
     catch {
         Write-Error "Failed to get environment URL: $_"
@@ -96,10 +105,10 @@ function Select-Environment {
     )
 
     try {
-        $environments = Get-Environments
+        $environments = @(Get-Environments)
 
         if ($Exclude) {
-            $environments = $environments | Where-Object { $_.Name -ne $Exclude }
+            $environments = @($environments | Where-Object { $_.Name -ne $Exclude })
         }
 
         Write-Host "Select environment:" -ForegroundColor Yellow
@@ -143,27 +152,23 @@ function Get-CopilotDefinition {
 
     try {
         $envUrl = Get-EnvironmentUrl -Environment $Environment
-        $headers = Get-AuthHeaders
+        $headers = Get-AuthHeaders -Resource $envUrl
 
-        # Get bot
-        $botsUri = "$envUrl/api/data/v9.2/bots?\`$filter=name eq '$Name'"
+        # Get all bots and filter client-side (server-side $filter not supported on bots entity)
+        $botsUri = "$envUrl/api/data/v9.2/bots"
         $botResponse = Invoke-RestMethod -Uri $botsUri -Headers $headers -Method Get
+        $bot = $botResponse.value | Where-Object { $_.name -eq $Name } | Select-Object -First 1
 
-        if ($botResponse.value.Count -eq 0) {
+        if (-not $bot) {
             throw "Copilot '$Name' not found in environment '$Environment'"
         }
 
-        $bot = $botResponse.value[0]
-
         # Get components
-        $componentsUri = "$envUrl/api/data/v9.2/botcomponents?\`$filter=_parentbotid_value eq $($bot.botid)"
+        $componentsUri = "$envUrl/api/data/v9.2/botcomponents?`$filter=_parentbotid_value eq $($bot.botid)"
         $componentsResponse = Invoke-RestMethod -Uri $componentsUri -Headers $headers -Method Get
 
-        # Group components by type
         $components = @{
-            Topics = @($componentsResponse.value | Where-Object { $_.componenttype -eq 0 })
-            Triggers = @($componentsResponse.value | Where-Object { $_.componenttype -eq 1 })
-            Skills = @($componentsResponse.value | Where-Object { $_.componenttype -eq 2 })
+            All = @($componentsResponse.value)
         }
 
         # Return definition
@@ -190,7 +195,7 @@ function Select-Copilot {
 
     try {
         $envUrl = Get-EnvironmentUrl -Environment $Environment
-        $headers = Get-AuthHeaders
+        $headers = Get-AuthHeaders -Resource $envUrl
 
         # Get all bots
         $botsUri = "$envUrl/api/data/v9.2/bots"
@@ -200,7 +205,7 @@ function Select-Copilot {
             throw "No copilots found in environment '$Environment'"
         }
 
-        $bots = $response.value
+        $bots = @($response.value)
 
         Write-Host "Select copilot:" -ForegroundColor Yellow
         for ($i = 0; $i -lt $bots.Count; $i++) {
@@ -239,7 +244,7 @@ function Publish-Copilot {
 
     try {
         $envUrl = Get-EnvironmentUrl -Environment $Environment
-        $headers = Get-AuthHeaders
+        $headers = Get-AuthHeaders -Resource $envUrl
 
         $publishUri = "$envUrl/api/data/v9.2/bots($BotId)/Microsoft.Dynamics.CRM.PvaPublish"
         Invoke-RestMethod -Uri $publishUri -Headers $headers -Method Post -Body "{}"
@@ -310,18 +315,21 @@ function Remove-SystemFields {
 
     $systemFields = @(
         'botid', 'botcomponentid', 'createdon', 'modifiedon',
-        '_createdby_value', '_modifiedby_value', '_ownerid_value',
-        'ownerid', 'owningbusinessunit', '_owningbusinessunit_value',
-        'owninguser', '_owninguser_value', 'owningteam', '_owningteam_value',
+        'ownerid', 'owningbusinessunit', 'owninguser', 'owningteam',
         'versionnumber', 'overriddencreatedon', 'solutionid',
-        '_parentbotid_value', 'parentbotid',
-        'environmentvariabledefinitionid', '_environmentvariabledefinitionid_value'
+        'parentbotid', 'environmentvariabledefinitionid'
     )
 
     foreach ($field in $systemFields) {
         if ($Data.PSObject.Properties[$field]) {
             $Data.PSObject.Properties.Remove($field)
         }
+    }
+
+    # Remove all reference lookup fields (_*_value) — null ones cause Dataverse errors
+    $refFields = $Data.PSObject.Properties.Name | Where-Object { $_ -match '^_.+_value$' }
+    foreach ($field in $refFields) {
+        $Data.PSObject.Properties.Remove($field)
     }
 
     return $Data

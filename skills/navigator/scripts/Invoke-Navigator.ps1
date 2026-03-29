@@ -1171,7 +1171,7 @@ function Start-AnalysisWorkflow {
         Write-Host ""
 
         # Import analysis module
-        $modulePath = Join-Path $PSScriptRoot "Modules\Copilot-Analysis.psm1"
+        $modulePath = Join-Path $PSScriptRoot "Copilot-Analysis.psm1"
         if (Test-Path $modulePath) {
             Import-Module $modulePath -Force -ErrorAction Stop
         } else {

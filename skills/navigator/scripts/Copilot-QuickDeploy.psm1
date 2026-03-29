@@ -10,9 +10,6 @@
     NO SOLUTION CREATION - Direct deployment only
 #>
 
-# Import core module
-Import-Module "$PSScriptRoot\Copilot-Core.psm1" -Force
-
 function Invoke-QuickDeploy {
     <#
     .SYNOPSIS
@@ -61,7 +58,7 @@ function Invoke-QuickDeploy {
         # Step 1: Get copilot definition from source
         Write-StepProgress "[1/3]" "Getting copilot from $SourceEnvironment..."
         $definition = Get-CopilotDefinition -Name $BotName -Environment $SourceEnvironment
-        Write-Host "  ✅ Retrieved $(($definition.Components.Topics.Count + $definition.Components.Triggers.Count + $definition.Components.Skills.Count)) components" -ForegroundColor Green
+        Write-Host "  ✅ Retrieved $($definition.Components.All.Count) components" -ForegroundColor Green
 
         # Step 2: Deploy directly (NO SOLUTION)
         Write-StepProgress "[2/3]" "Deploying to $TargetEnvironment..."
@@ -162,12 +159,12 @@ function Find-CopilotByName {
 
     try {
         $envUrl = Get-EnvironmentUrl -Environment $Environment
-        $headers = Get-AuthHeaders
+        $headers = Get-AuthHeaders -Resource $envUrl
 
-        $uri = "$envUrl/api/data/v9.2/bots?\`$filter=name eq '$Name'"
+        $uri = "$envUrl/api/data/v9.2/bots"
         $response = Invoke-RestMethod -Uri $uri -Headers $headers -Method Get
 
-        return $response.value | Select-Object -First 1
+        return $response.value | Where-Object { $_.name -eq $Name } | Select-Object -First 1
     }
     catch {
         # Return null if not found
@@ -193,7 +190,7 @@ function Update-CopilotInPlace {
 
     try {
         $envUrl = Get-EnvironmentUrl -Environment $Environment
-        $headers = Get-AuthHeaders
+        $headers = Get-AuthHeaders -Resource $envUrl
 
         # Update bot properties
         $botData = $Definition.Bot | ConvertTo-Json -Depth 10 | ConvertFrom-Json
@@ -226,7 +223,8 @@ function New-CopilotDirect {
 
     try {
         $envUrl = Get-EnvironmentUrl -Environment $Environment
-        $headers = Get-AuthHeaders
+        $headers = Get-AuthHeaders -Resource $envUrl
+        $headers['Prefer'] = 'return=representation'
 
         # Create bot
         $botData = $Definition.Bot | ConvertTo-Json -Depth 10 | ConvertFrom-Json
@@ -266,18 +264,14 @@ function Update-BotComponents {
 
     try {
         $envUrl = Get-EnvironmentUrl -Environment $Environment
-        $headers = Get-AuthHeaders
+        $headers = Get-AuthHeaders -Resource $envUrl
 
-        # Collect all components
-        $allComponents = @()
-        if ($Components.Topics) { $allComponents += $Components.Topics }
-        if ($Components.Triggers) { $allComponents += $Components.Triggers }
-        if ($Components.Skills) { $allComponents += $Components.Skills }
+        $allComponents = @($Components.All)
 
         foreach ($component in $allComponents) {
             try {
                 # Check if component exists
-                $uri = "$envUrl/api/data/v9.2/botcomponents?\`$filter=_parentbotid_value eq $BotId and name eq '$($component.name)'"
+                $uri = "$envUrl/api/data/v9.2/botcomponents?`$filter=_parentbotid_value eq $BotId and name eq '$($component.name)'"
                 $existing = (Invoke-RestMethod -Uri $uri -Headers $headers -Method Get).value | Select-Object -First 1
 
                 # Clean component data
@@ -325,13 +319,9 @@ function New-BotComponents {
 
     try {
         $envUrl = Get-EnvironmentUrl -Environment $Environment
-        $headers = Get-AuthHeaders
+        $headers = Get-AuthHeaders -Resource $envUrl
 
-        # Collect all components
-        $allComponents = @()
-        if ($Components.Topics) { $allComponents += $Components.Topics }
-        if ($Components.Triggers) { $allComponents += $Components.Triggers }
-        if ($Components.Skills) { $allComponents += $Components.Skills }
+        $allComponents = @($Components.All)
 
         foreach ($component in $allComponents) {
             try {
