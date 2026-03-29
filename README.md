@@ -1,18 +1,33 @@
-# 🧭 Navigator v2.0 - Copilot Deployment Tool
+# 🧭 Navigator - Copilot Deployment Tool
 
 > *"Every journey begins with a single step"* - Lao Tzu
 
 **Fast testing and production deployment for Microsoft Copilot Studio across Power Platform environments**
 
-![Version](https://img.shields.io/badge/version-2.0.0-blue)
+![Version](https://img.shields.io/badge/version-2.2.0-blue)
 ![PowerShell](https://img.shields.io/badge/PowerShell-7.0%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
+![Platform](https://img.shields.io/badge/platform-Power%20Platform-742774)
+![Channels](https://img.shields.io/badge/channels-3-brightgreen)
 
 ---
 
 ## 🎯 What is Navigator?
 
-Navigator is a powerful deployment tool for Microsoft Copilot Studio that gives you **two ways to move copilots between environments:**
+> **If you build Microsoft Copilot Studio agents, you know the pain:** every time you want to test a change, you're stuck manually exporting, importing, publishing — a process that eats 10-15 minutes of your day, every single time. Multiply that across a team and environments, and you're losing hours to deployment busywork instead of building. **Navigator eliminates that entirely.**
+
+Navigator is an **open-source deployment automation tool** for Microsoft Copilot Studio that moves your agents between Power Platform environments in seconds — not minutes. It talks directly to the Dataverse API, handles all component types (topics, knowledge sources, agent skills), and gives you three ways to trigger it: a Claude Code skill, a PowerShell script, or a VS Code keyboard shortcut. No manual exports. No solution wizards. No waiting.
+
+- 🚀 **Deploy any agent to any environment in 30-60 seconds** with Smart Test mode
+- 🏗️ **Production-grade DV Solution packaging** with full audit trail when you need it
+- 🤖 **Three channels** — Claude Code `/navigator`, PowerShell, or `Ctrl+Shift+T` in VS Code
+- 🔒 **Production safety built-in** — auto-switches to DV Solution Migration when targeting Production
+- ⚙️ **Zero manual steps** — authenticate once with Azure CLI, then it's one command
+- 🆓 **Free and open-source** — no licences, no SaaS fees, no API keys required
+
+---
+
+Navigator gives you **two ways to move copilots between environments:**
 
 ### ⚡ Smart Test Mode
 **For Testing & Iteration**
