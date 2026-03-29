@@ -2,7 +2,7 @@
 
 <#
 .SYNOPSIS
-    Navigator - Copilot Deployment Tool
+    Navigator - Copilot Deployment Skill
 
 .DESCRIPTION
     Deploy Copilot Studio bots across any Power Platform environment with two modes:
@@ -79,7 +79,7 @@ param(
 # Banner
 Write-Host ""
 Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Cyan
-Write-Host "🧭 NAVIGATOR - Copilot Deployment Tool" -ForegroundColor Cyan
+Write-Host "🧭 NAVIGATOR - Copilot Deployment Skill" -ForegroundColor Cyan
 Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Cyan
 Write-Host ""
 

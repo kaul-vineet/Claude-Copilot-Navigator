@@ -5,7 +5,7 @@ triggers:
   - /navigator
 ---
 
-# Navigator v2.0 - Enhanced Copilot Deployment Tool
+# Navigator v2.0 - Enhanced Copilot Deployment Skill
 
 ## Quick Reference
 
@@ -207,7 +207,7 @@ I'll quickly deploy Sales Assistant to UAT for testing.
 Running Smart Test mode...
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧭 NAVIGATOR v2.0 - Copilot Deployment Tool
+🧭 NAVIGATOR v2.0 - Copilot Deployment Skill
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📋 Deployment Configuration:
@@ -258,7 +258,7 @@ Claude:
 I notice you're deploying to Production. I'll automatically use DV Solution Migration mode for safety and proper governance.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧭 NAVIGATOR v2.0 - Copilot Deployment Tool
+🧭 NAVIGATOR v2.0 - Copilot Deployment Skill
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🔒 Target is Production - automatically switching to DV Solution Migration mode for safety

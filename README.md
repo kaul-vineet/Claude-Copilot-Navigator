@@ -1,4 +1,4 @@
-# 🧭 Navigator - Copilot Deployment Tool
+# 🧭 Navigator - Copilot Deployment Skill
 
 > *"Every journey begins with a single step"* - Lao Tzu
 

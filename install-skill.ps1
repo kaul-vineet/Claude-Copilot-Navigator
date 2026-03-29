@@ -57,7 +57,7 @@ function Show-Banner {
     Write-Host "╔══════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
     Write-Host "║     🧭  NAVIGATOR SKILL INSTALLER v2.0  🧭               ║" -ForegroundColor Yellow
     Write-Host "║                                                          ║" -ForegroundColor Cyan
-    Write-Host "║     Copilot Deployment Tool for Claude Code             ║" -ForegroundColor White
+    Write-Host "║     Copilot Deployment Skill for Claude Code             ║" -ForegroundColor White
     Write-Host "╚══════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
     Write-Host ""
 }
@@ -139,7 +139,7 @@ function Install-NavigatorSkill {
 
     $action = if ($IsUpdate) { "Updating" } else { "Installing" }
 
-    Write-Host "🧭  $action Navigator - Copilot Deployment Tool" -ForegroundColor Cyan
+    Write-Host "🧭  $action Navigator - Copilot Deployment Skill" -ForegroundColor Cyan
     Write-Host "   Version: $skillVersion" -ForegroundColor Gray
     Write-Host ""
 
