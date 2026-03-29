@@ -1,18 +1,5 @@
-# Rommel - Copilot Migration Tool
+# Navigator - Copilot Deployment Tool
 # .gitignore
-
-# Session and development logs
-session.md
-
-# Temporary helper scripts (generated during skill execution)
-.rommel-session.ps1
-.az-helper.ps1
-.get-environments.ps1
-.get-copilots.ps1
-.execute-migration.ps1
-.debug-bot-creation.ps1
-.import-components.ps1
-.publish-bot.ps1
 
 # Export files (contain bot definitions)
 *-[0-9]*.json
