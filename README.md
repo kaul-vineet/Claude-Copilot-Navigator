@@ -227,12 +227,38 @@ Follow the prompts to select copilot and target environment.
 
 **What Happens:**
 1. ✅ Exports copilot from source
-2. ✅ Creates solution: `Navigator_SalesAssistant_YYYYMMDD_HHMMSS`
-3. ✅ Packages all components with dependencies
-4. ✅ Imports to target as managed solution
-5. ✅ Publishes with full audit trail
+2. ✅ Prompts for migration type (Full Copilot or Template Only)
+3. ✅ Prompts for parameter customisation (name, description, language, schema name)
+4. ✅ Creates solution: `Navigator_SalesAssistant_YYYYMMDD_HHMMSS`
+5. ✅ Packages all components with dependencies
+6. ✅ Imports to target as managed solution
+7. ✅ Publishes with full audit trail
 
 **Time:** 4-8 minutes
+
+---
+
+#### Migration Types (DV mode only)
+
+| Type | What Migrates | Use Case |
+|------|--------------|----------|
+| **Full Copilot** | Everything — topics, knowledge, skills, triggers | Standard migration |
+| **Template Only** | Bot structure only, no content | Create a blank template from an existing bot |
+
+---
+
+#### Parameter Customisation (DV mode only)
+
+During DV migration you are prompted to optionally override:
+
+| Parameter | Example | Notes |
+|-----------|---------|-------|
+| **Bot Name** | `Sales Assistant v2` | Rename at import time |
+| **Description** | `Production release` | Override the bot description |
+| **Language** | `1033` | Locale code — 1033 = English (US) |
+| **Schema Name** | `new_SalesAssistant` | Dataverse unique name |
+
+Press Enter to keep the original value for any field.
 
 ---
 
@@ -346,7 +372,7 @@ PS> .\Navigator.ps1 -Mode SmartTest -BotName "Sales Assistant" -Target "UAT"
 
 ### Modules
 
-#### `Modules/Copilot-Core.psm1`
+#### `scripts/Copilot-Core.psm1`
 **Shared utilities used by both Quick and DV Solution Migration modes**
 
 Functions:
@@ -357,7 +383,7 @@ Functions:
 
 ---
 
-#### `Modules/Copilot-QuickDeploy.psm1`
+#### `scripts/Copilot-QuickDeploy.psm1`
 **Smart Test logic (no solutions)**
 
 Functions:
@@ -370,7 +396,7 @@ Functions:
 
 ---
 
-#### `Modules/Copilot-Analysis.psm1`
+#### `scripts/Copilot-Analysis.psm1`
 **Built-in analysis features**
 
 Functions:
@@ -383,18 +409,6 @@ Functions:
 
 ---
 
-#### `Modules/Copilot-LLM-Intelligence.psm1`
-**Optional AI-powered analysis**
-
-Functions:
-- `Invoke-ClaudeAPI` - API calls or skill-aware mode
-- `Analyze-ComponentFailureWithLLM` - AI diagnostics
-- Migration readiness analysis
-- Post-migration review
-
-**Requires:** ANTHROPIC_API_KEY (optional)
-
----
 
 ## 🔧 How It Works
 
