@@ -80,7 +80,7 @@ winget install Microsoft.PowerShell
 winget install Microsoft.AzureCLI
 
 # 2. Clone or download Navigator
-cd C:\code\ClaudeCopilotMgmtSkill
+cd C:\code\Claude-Copilot-Navigator
 
 # 3. Quick deploy to test environment
 .\Navigator.ps1 -Mode SmartTest
@@ -120,7 +120,7 @@ If you use Claude Code, install Navigator as a skill for easy access:
 
 ```powershell
 # Run the installer
-cd C:\code\ClaudeCopilotMgmtSkill
+cd C:\code\Claude-Copilot-Navigator
 .\install-skill.ps1
 ```
 
@@ -141,7 +141,7 @@ Then use it in Claude Code:
 No installation needed! Just run the scripts directly:
 
 ```powershell
-cd C:\code\ClaudeCopilotMgmtSkill
+cd C:\code\Claude-Copilot-Navigator
 .\Navigator.ps1
 ```
 
@@ -153,7 +153,7 @@ cd C:\code\ClaudeCopilotMgmtSkill
 
 ```powershell
 # 1. Build the extension
-cd C:\code\ClaudeCopilotMgmtSkill\vscode-extension
+cd C:\code\Claude-Copilot-Navigator\vscode-extension
 npm install
 npm run compile
 
